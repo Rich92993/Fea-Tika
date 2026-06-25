@@ -66,7 +66,7 @@ export default function Home() {
       {/* Simple Footer */}
       <footer className="border-t border-white/10 bg-black/40 backdrop-blur-sm mt-auto">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm text-gray-400">&copy; 2026 ÉLÉGANCE. All rights reserved.</p>
+          <p className="text-sm text-gray-400">&copy; 2026 Fea Tika. All rights reserved.</p>
         </div>
       </footer>
     </main>
