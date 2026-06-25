@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import CartDrawer from "@/components/CartDrawer";
 import VibrantBackground from "@/components/VibrantBackground";
+import LiveChat from '@/components/LiveChat';
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -15,8 +16,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Fea Tika",
-  description: "We sell quality items aki ae mahu'inga fe'unga",
+  title: "FEATIKA | Premium Products",
+  description: "Discover our curated collection of premium products.",
 };
 
 export default function RootLayout({
@@ -31,6 +32,7 @@ export default function RootLayout({
         <div className="relative z-10 min-h-screen flex flex-col">
           {children}
           <CartDrawer />
+          <LiveChat />
         </div>
       </body>
     </html>
