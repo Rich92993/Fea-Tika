@@ -13,7 +13,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="mx-auto max-w-7xl px-4 py-24 sm:py-32 sm:px-6 lg:px-8 text-center">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold tracking-tight text-white drop-shadow-xl">
-          Curated for the <br className="hidden sm:block" /> modern aesthetic.
+          Welcome to <br className="hidden sm:block" /> Fea Tika.
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg text-gray-200 font-normal drop-shadow-md">
           Discover our exclusive collection of premium products designed to elevate your everyday life.
