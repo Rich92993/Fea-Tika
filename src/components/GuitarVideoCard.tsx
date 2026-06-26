@@ -1,4 +1,4 @@
-﻿type GuitarVideoCardProps = {
+type GuitarVideoCardProps = {
   title: string;
   videoId: string;
   level: string;
@@ -11,7 +11,7 @@ export default function GuitarVideoCard({ title, videoId, level, description }: 
       {/* Responsive YouTube Embed */}
       <div className="relative w-full aspect-video bg-black/50">
         <iframe
-          src={`https://www.youtube.com/embed/${videoId}`}
+          src={`https://www.youtube-nocookie.com/embed/${videoId}`}
           title={title}
           className="absolute inset-0 w-full h-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
