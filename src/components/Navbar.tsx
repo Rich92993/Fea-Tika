@@ -23,6 +23,9 @@ export default function Navbar() {
           <Link href="/collections" className="text-sm font-medium text-gray-200 hover:text-white transition-colors">
             Collections
           </Link>
+          <Link href="/guitar" className="text-sm font-medium text-cyan-300 hover:text-cyan-100 transition-colors">
+            Guitar
+          </Link>
           <Link href="/about" className="text-sm font-medium text-gray-200 hover:text-white transition-colors">
             About
           </Link>
