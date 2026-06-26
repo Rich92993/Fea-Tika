@@ -1,4 +1,4 @@
-export type Product = {
+﻿export type Product = {
   id: string;
   name: string;
   price: number;
@@ -8,20 +8,20 @@ export type Product = {
 };
 
 export const categories = [
-  { id: 'all', name: 'All Products', icon: '???' },
-  { id: 'shoes', name: 'Shoes', icon: '??' },
-  { id: 'earphones', name: 'Earphones', icon: '??' },
-  { id: 'fans', name: 'Fans', icon: '??' },
-  { id: 'graphic-cards', name: 'Graphic Cards', icon: '??' },
-  { id: 'earrings', name: 'Earrings', icon: '??' },
+  { id: 'all', name: 'All Products', icon: '✦' },
+  { id: 'shoes', name: 'Shoes', icon: 'SH' },
+  { id: 'earphones', name: 'Earphones', icon: 'EP' },
+  { id: 'fans', name: 'Fans', icon: 'FN' },
+  { id: 'graphic-cards', name: 'Graphic Cards', icon: 'GPU' },
+  { id: 'earrings', name: 'Earrings', icon: 'ER' },
 ];
 
 export const mockProducts: Product[] = [
   {
     id: '1',
     name: 'Premium Running Shoes',
-    price: 100.00,
-    image: '/images/shoes/1.jpg',
+    price: 189.00,
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80',
     category: 'shoes',
     description: 'High-performance running shoes with advanced cushioning technology for ultimate comfort.',
   },
@@ -85,7 +85,7 @@ export const mockProducts: Product[] = [
     id: '9',
     name: 'RTX 4080 Graphics Card',
     price: 1199.00,
-    image: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d8?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1605218427306-022ba6c0849e?auto=format&fit=crop&w=800&q=80',
     category: 'graphic-cards',
     description: 'High-performance graphics card for 4K gaming and content creation.',
   },
@@ -93,7 +93,7 @@ export const mockProducts: Product[] = [
     id: '10',
     name: 'Gold Hoop Earrings',
     price: 199.00,
-    image: 'https://images.unsplash.com/photo-1635767582909-345876111801?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=800&q=80',
     category: 'earrings',
     description: 'Classic gold hoop earrings with a modern twist.',
   },
