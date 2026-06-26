@@ -1,4 +1,4 @@
-﻿export type Product = {
+export type Product = {
   id: string;
   name: string;
   price: number;
@@ -8,12 +8,12 @@
 };
 
 export const categories = [
-  { id: 'all', name: 'All Products', icon: '🛍️' },
-  { id: 'shoes', name: 'Shoes', icon: '👟' },
-  { id: 'earphones', name: 'Earphones', icon: '🎧' },
-  { id: 'fans', name: 'Fans', icon: '💨' },
-  { id: 'graphic-cards', name: 'Graphic Cards', icon: '🎮' },
-  { id: 'earrings', name: 'Earrings', icon: '💎' },
+  { id: 'all', name: 'All Products', icon: '???' },
+  { id: 'shoes', name: 'Shoes', icon: '??' },
+  { id: 'earphones', name: 'Earphones', icon: '??' },
+  { id: 'fans', name: 'Fans', icon: '??' },
+  { id: 'graphic-cards', name: 'Graphic Cards', icon: '??' },
+  { id: 'earrings', name: 'Earrings', icon: '??' },
 ];
 
 export const mockProducts: Product[] = [
@@ -45,7 +45,7 @@ export const mockProducts: Product[] = [
     id: '4',
     name: 'RTX 4090 Graphics Card',
     price: 1599.00,
-    image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800&q=80',
+    image: 'https://res.cloudinary.com/dmofglu7u/image/upload/v1782442868/Weixin_Image_2026-05-20_090116_384_qi2hnm.jpg',
     category: 'graphic-cards',
     description: 'Top-tier graphics card for gaming and professional workloads with 24GB VRAM.',
   },
