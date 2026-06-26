@@ -16,8 +16,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "FEATIKA | Premium Products",
-  description: "Discover our curated collection of premium products.",
+  title: "Fea Tika",
+  description: "We sell quality items aki ae mahu'inga fe'unga",
 };
 
 export default function RootLayout({
