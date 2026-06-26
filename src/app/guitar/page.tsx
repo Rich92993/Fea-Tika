@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar';
 import GuitarVideoCard from '@/components/GuitarVideoCard';
 import Metronome from '@/components/Metronome';
+import Tuner from '@/components/Tuner';
 
 // Placeholder data - You will change the videoIds to your own YouTube videos!
 const guitarLessons = [
@@ -52,6 +53,7 @@ export default function GuitarPage() {
       {/* Video Grid */}
       <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
         <Metronome />
+        <Tuner />
       </section>
       <section className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2">
