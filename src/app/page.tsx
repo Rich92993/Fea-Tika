@@ -16,7 +16,7 @@ export default function Home() {
           Welcome to <br className="hidden sm:block" /> Fea Tika.
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg text-gray-200 font-normal drop-shadow-md">
-          Discover our exclusive collection of premium products designed to elevate your everyday life.
+          We sell quality items aki ae mahu'inga fe'unga.
         </p>
         <div className="mt-10 flex justify-center gap-4">
           <Link href="/shop">
