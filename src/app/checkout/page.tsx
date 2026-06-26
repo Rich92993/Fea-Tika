@@ -1,9 +1,9 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
-import { Banknote, Building2, Qrcode, CheckCircle2, Copy, MessageCircle } from 'lucide-react';
+import { Banknote, Building2, QrCode, CheckCircle2, Copy, MessageCircle } from 'lucide-react';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -131,7 +131,7 @@ export default function CheckoutPage() {
                     : 'bg-white/5 border-white/10 hover:bg-white/10'
                 }`}
               >
-                <Qrcode className="h-6 w-6 text-green-400" />
+                <QrCode className="h-6 w-6 text-green-400" />
                 <div className="text-left">
                   <div className="font-bold text-white">WeChat Pay</div>
                   <div className="text-sm text-gray-400">Scan QR code to pay</div>
@@ -202,7 +202,7 @@ export default function CheckoutPage() {
                   {/* Replace this with your actual WeChat QR code image */}
                   <div className="bg-white p-4 rounded-xl inline-block mb-4">
                     <div className="w-48 h-48 bg-gray-200 flex items-center justify-center">
-                      <Qrcode className="h-24 w-24 text-gray-400" />
+                      <QrCode className="h-24 w-24 text-gray-400" />
                       <span className="sr-only">WeChat Pay QR Code</span>
                     </div>
                   </div>
