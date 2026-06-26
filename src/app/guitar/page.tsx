@@ -6,7 +6,7 @@ const guitarLessons = [
   {
     id: '1',
     title: 'Helepelu Tuning',
-    videoId: 'https://www.youtube.com/watch?v=7IBfWBc0TJM', // Replace with your YouTube Video ID
+    videoId: '7IBfWBc0TJM', // Replace with your YouTube Video ID
     level: 'Beginner',
     description: 'Learn the fundamental open chords that every guitarist needs to know to start playing songs.',
   },
