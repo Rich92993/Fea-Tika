@@ -50,32 +50,54 @@ export default function Tuner() {
     }
   };
 
-  const playTone = (freq: number, stringIndex: number) => {
+  // Karplus-Strong Algorithm for realistic plucked string synthesis
+  const playPluckedString = (freq: number, stringIndex: number) => {
     initAudio();
-    if (!audioContextRef.current) return;
+    const ctx = audioContextRef.current!;
+    
+    // 1. Create a burst of white noise (the "pick" hitting the string)
+    const bufferSize = ctx.sampleRate / freq;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
 
-    const ctx = audioContextRef.current;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
 
-    // Triangle wave sounds much more like a guitar string than a sine wave
-    osc.type = 'triangle';
-    osc.frequency.value = freq;
+    // 2. Create a lowpass filter to dampen high frequencies (string physics)
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = freq * 6; 
 
-    // Plucked string envelope (quick attack, smooth decay)
-    const now = ctx.currentTime;
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.6, now + 0.05); 
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 3.0); 
+    // 3. Create the delay line (the length of the string)
+    const delay = ctx.createDelay();
+    delay.delayTime.value = 1 / freq;
 
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+    // 4. Create feedback loop (the string vibrating back and forth)
+    const feedback = ctx.createGain();
+    feedback.gain.value = 0.96; // Sustain length
 
-    osc.start(now);
-    osc.stop(now + 3.0);
+    // 5. Master volume envelope
+    const envelope = ctx.createGain();
+    envelope.gain.setValueAtTime(0.8, ctx.currentTime);
+    envelope.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
+
+    // Connect the graph: Noise -> Filter -> Delay -> Feedback -> Delay
+    noise.connect(filter);
+    filter.connect(delay);
+    delay.connect(feedback);
+    feedback.connect(delay);
+    delay.connect(envelope);
+    envelope.connect(ctx.destination);
+
+    // Play and stop
+    noise.start();
+    noise.stop(ctx.currentTime + 2.5);
 
     setPlayingString(stringIndex);
-    setTimeout(() => setPlayingString(null), 3000);
+    setTimeout(() => setPlayingString(null), 2500);
   };
 
   const autoCorrelate = (buf: Float32Array, sampleRate: number) => {
@@ -251,7 +273,7 @@ export default function Tuner() {
             return (
               <button
                 key={str.num}
-                onClick={() => playTone(str.freq, index)}
+                onClick={() => playPluckedString(str.freq, index)}
                 className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
                   isPlaying 
                     ? 'bg-cyan-500/20 border-cyan-400/50 shadow-[0_0_15px_rgba(34,211,238,0.3)]' 
