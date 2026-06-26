@@ -1,9 +1,9 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
-import { Banknote, Building2, QrCode, CheckCircle2, Copy, MessageCircle } from 'lucide-react';
+import { Banknote, Building2, QrCode, CheckCircle2, Copy } from 'lucide-react';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -17,7 +17,6 @@ export default function CheckoutPage() {
     paymentReference: '',
   });
 
-  // Mock cart data (you'll connect this to your real cart later)
   const cartItems = [
     { id: '1', name: 'Premium Running Shoes', price: 189.00, quantity: 1 },
   ];
@@ -25,7 +24,6 @@ export default function CheckoutPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would send the order to your backend/database
     setOrderSubmitted(true);
   };
 
@@ -47,10 +45,7 @@ export default function CheckoutPage() {
               Order Submitted!
             </h1>
             <p className="text-gray-300 mb-6">
-              Thank you for your order. We've received your payment reference and will process your order shortly.
-            </p>
-            <p className="text-gray-400 text-sm mb-8">
-              We'll send you a confirmation email at <strong>{formData.email}</strong>
+              Thank you for your order. We will process your order shortly.
             </p>
             <button
               onClick={() => router.push('/')}
@@ -199,11 +194,9 @@ export default function CheckoutPage() {
                   <p className="text-sm text-gray-400 mb-4">
                     Scan with WeChat to pay K{total.toFixed(2)}
                   </p>
-                  {/* Replace this with your actual WeChat QR code image */}
                   <div className="bg-white p-4 rounded-xl inline-block mb-4">
                     <div className="w-48 h-48 bg-gray-200 flex items-center justify-center">
                       <QrCode className="h-24 w-24 text-gray-400" />
-                      <span className="sr-only">WeChat Pay QR Code</span>
                     </div>
                   </div>
                   <p className="text-xs text-gray-500">
