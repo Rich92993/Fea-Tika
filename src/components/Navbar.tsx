@@ -16,7 +16,7 @@ export default function Navbar() {
           FEA TIKA
         </Link>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="flex md:flex items-center gap-3 md:gap-8 text-xs md:text-sm">
           <Link href="/shop" className="text-sm font-medium text-gray-200 hover:text-white transition-colors">
             Shop
           </Link>
