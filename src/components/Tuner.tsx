@@ -1,30 +1,29 @@
 ﻿'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, CheckCircle2, ChevronDown } from 'lucide-react';
+import { Mic, MicOff, CheckCircle2, ChevronDown, Play, Volume2 } from 'lucide-react';
 
-// Define the tunings and their exact frequencies
 const TUNINGS = {
   standard: {
     name: 'Standard (EADGBE)',
     strings: [
-      { note: 'E2', freq: 82.41 },
-      { note: 'A2', freq: 110.00 },
-      { note: 'D3', freq: 146.83 },
-      { note: 'G3', freq: 196.00 },
-      { note: 'B3', freq: 246.94 },
-      { note: 'E4', freq: 329.63 },
+      { note: 'E2', freq: 82.41, num: 6 },
+      { note: 'A2', freq: 110.00, num: 5 },
+      { note: 'D3', freq: 146.83, num: 4 },
+      { note: 'G3', freq: 196.00, num: 3 },
+      { note: 'B3', freq: 246.94, num: 2 },
+      { note: 'E4', freq: 329.63, num: 1 },
     ]
   },
   helepelu: {
     name: 'Helepelu (GCDGBD)',
     strings: [
-      { note: 'G2', freq: 98.00 },
-      { note: 'C3', freq: 130.81 },
-      { note: 'D3', freq: 146.83 },
-      { note: 'G3', freq: 196.00 },
-      { note: 'B3', freq: 246.94 },
-      { note: 'D4', freq: 293.66 },
+      { note: 'G2', freq: 98.00, num: 6 },
+      { note: 'C3', freq: 130.81, num: 5 },
+      { note: 'D3', freq: 146.83, num: 4 },
+      { note: 'G3', freq: 196.00, num: 3 },
+      { note: 'B3', freq: 246.94, num: 2 },
+      { note: 'D4', freq: 293.66, num: 1 },
     ]
   }
 };
@@ -35,11 +34,49 @@ export default function Tuner() {
   const [targetString, setTargetString] = useState({ note: '--', freq: 0 });
   const [cents, setCents] = useState(0);
   const [frequency, setFrequency] = useState(0);
+  const [playingString, setPlayingString] = useState<number | null>(null);
   
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const rafRef = useRef<number | null>(null);
+
+  const initAudio = () => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+    if (audioContextRef.current.state === 'suspended') {
+      audioContextRef.current.resume();
+    }
+  };
+
+  const playTone = (freq: number, stringIndex: number) => {
+    initAudio();
+    if (!audioContextRef.current) return;
+
+    const ctx = audioContextRef.current;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    // Triangle wave sounds much more like a guitar string than a sine wave
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+
+    // Plucked string envelope (quick attack, smooth decay)
+    const now = ctx.currentTime;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.6, now + 0.05); 
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 3.0); 
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 3.0);
+
+    setPlayingString(stringIndex);
+    setTimeout(() => setPlayingString(null), 3000);
+  };
 
   const autoCorrelate = (buf: Float32Array, sampleRate: number) => {
     let SIZE = buf.length;
@@ -90,7 +127,6 @@ export default function Tuner() {
     if (ac !== -1 && ac > 60 && ac < 1500) {
       setFrequency(ac);
       
-      // Find the closest string in the selected tuning
       const currentTuning = TUNINGS[selectedTuning as keyof typeof TUNINGS];
       let closest = currentTuning.strings[0];
       let minDiff = Math.abs(Math.log(ac / closest.freq));
@@ -103,7 +139,6 @@ export default function Tuner() {
         }
       }
 
-      // Calculate cents offset from the target string
       const centsOffset = 1200 * Math.log2(ac / closest.freq);
       
       setTargetString(closest);
@@ -117,11 +152,11 @@ export default function Tuner() {
 
   const startListening = async () => {
     try {
+      initAudio();
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
-      audioContextRef.current = new AudioContext();
-      analyserRef.current = audioContextRef.current.createAnalyser();
-      const source = audioContextRef.current.createMediaStreamSource(stream);
+      analyserRef.current = audioContextRef.current!.createAnalyser();
+      const source = audioContextRef.current!.createMediaStreamSource(stream);
       source.connect(analyserRef.current);
       
       setIsListening(true);
@@ -135,7 +170,6 @@ export default function Tuner() {
   const stopListening = () => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     if (streamRef.current) streamRef.current.getTracks().forEach(track => track.stop());
-    if (audioContextRef.current) audioContextRef.current.close();
     
     setIsListening(false);
     setTargetString({ note: '--', freq: 0 });
@@ -145,13 +179,13 @@ export default function Tuner() {
 
   const needlePosition = Math.max(0, Math.min(100, (cents + 50)));
   const isInTune = Math.abs(cents) < 5 && frequency > 0;
+  const currentTuningStrings = TUNINGS[selectedTuning as keyof typeof TUNINGS].strings;
 
   return (
     <div className="w-full max-w-2xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl mt-8">
       <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
         <h2 className="text-2xl font-serif font-bold text-white drop-shadow-md">Guitar Tuner</h2>
         
-        {/* Tuning Selector */}
         <div className="relative">
           <select
             value={selectedTuning}
@@ -188,9 +222,8 @@ export default function Tuner() {
       </div>
 
       {/* Cents Meter */}
-      <div className="relative w-full h-4 bg-white/10 rounded-full overflow-hidden border border-white/5">
+      <div className="relative w-full h-4 bg-white/10 rounded-full overflow-hidden border border-white/5 mb-12">
         <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30 -translate-x-1/2 z-10"></div>
-        
         <div 
           className={`absolute top-0 bottom-0 w-2 rounded-full transition-all duration-100 ease-out ${
             isInTune ? 'bg-green-400 shadow-[0_0_15px_rgba(74,222,128,0.8)]' : 'bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]'
@@ -199,13 +232,47 @@ export default function Tuner() {
         ></div>
       </div>
       
-      <div className="flex justify-between text-xs text-gray-500 mt-2 font-medium">
+      <div className="flex justify-between text-xs text-gray-500 mb-10 font-medium">
         <span>FLAT (-50)</span>
         <span>IN TUNE (0)</span>
         <span>SHARP (+50)</span>
       </div>
 
-      {/* Start/Stop Button */}
+      {/* Reference Tones Section */}
+      <div className="border-t border-white/10 pt-8">
+        <div className="flex items-center gap-2 mb-6">
+          <Volume2 className="h-5 w-5 text-cyan-400" />
+          <h3 className="text-lg font-bold text-white">Reference Tones (Tune by Ear)</h3>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {currentTuningStrings.map((str, index) => {
+            const isPlaying = playingString === index;
+            return (
+              <button
+                key={str.num}
+                onClick={() => playTone(str.freq, index)}
+                className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
+                  isPlaying 
+                    ? 'bg-cyan-500/20 border-cyan-400/50 shadow-[0_0_15px_rgba(34,211,238,0.3)]' 
+                    : 'bg-white/5 border-white/10 hover:bg-white/10'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-gray-400 font-mono w-6">{str.num}th</span>
+                  <span className="text-xl font-bold text-white">{str.note}</span>
+                  <span className="text-xs text-gray-500 font-mono">{str.freq} Hz</span>
+                </div>
+                <div className={`p-2 rounded-full ${isPlaying ? 'bg-cyan-400 text-black' : 'bg-white/10 text-gray-400'}`}>
+                  {isPlaying ? <Volume2 className="h-4 w-4 animate-pulse" /> : <Play className="h-4 w-4" />}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Start/Stop Mic Button */}
       <div className="flex justify-center mt-8">
         <button 
           onClick={isListening ? stopListening : startListening}
@@ -215,7 +282,7 @@ export default function Tuner() {
               : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50 hover:bg-cyan-500/30'
           }`}
         >
-          {isListening ? <><MicOff className="h-4 w-4" /> Stop Tuner</> : <><Mic className="h-4 w-4" /> Start Tuner</>}
+          {isListening ? <><MicOff className="h-4 w-4" /> Stop Mic</> : <><Mic className="h-4 w-4" /> Start Mic</>}
         </button>
       </div>
     </div>
